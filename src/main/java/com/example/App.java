@@ -33,7 +33,7 @@ public class App {
         return (double) a / b;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static HttpServer createServer() throws IOException {
 
         HttpServer server = HttpServer.create(
                 new InetSocketAddress("0.0.0.0", 8080), 0);
@@ -57,20 +57,25 @@ public class App {
 
                     switch (operation) {
                         case "add":
-                            result = String.valueOf(calculator.add(num1, num2));
+                            result = String.valueOf(
+                                    calculator.add(num1, num2));
                             break;
                         case "subtract":
-                            result = String.valueOf(calculator.subtract(num1, num2));
+                            result = String.valueOf(
+                                    calculator.subtract(num1, num2));
                             break;
                         case "multiply":
-                            result = String.valueOf(calculator.multiply(num1, num2));
+                            result = String.valueOf(
+                                    calculator.multiply(num1, num2));
                             break;
                         case "divide":
-                            result = String.valueOf(calculator.divide(num1, num2));
+                            result = String.valueOf(
+                                    calculator.divide(num1, num2));
                             break;
                         default:
                             result = "Invalid operation";
                     }
+
                 } catch (ArithmeticException e) {
                     result = "Error: " + e.getMessage();
                 } catch (Exception e) {
@@ -147,16 +152,22 @@ public class App {
                         </div>
                     </body>
                     </html>
-                    """.formatted(escapeHtml(result));
+                    """.formatted(result);
 
             sendResponse(exchange, 200, html, "text/html; charset=UTF-8");
         });
 
         server.createContext("/health", exchange -> {
-            sendResponse(exchange, 200, "Application is healthy!", "text/plain");
+            sendResponse(exchange, 200,
+                    "Application is healthy!", "text/plain");
         });
 
         server.setExecutor(null);
+        return server;
+    }
+
+    public static void main(String[] args) throws IOException {
+        HttpServer server = createServer();
         server.start();
 
         System.out.println("Calculator website running on port 8080");
@@ -180,23 +191,18 @@ public class App {
     }
 
     private static void sendResponse(
-            HttpExchange exchange, int status, String response, String contentType)
-            throws IOException {
+            HttpExchange exchange,
+            int status,
+            String response,
+            String contentType) throws IOException {
 
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+
         exchange.getResponseHeaders().set("Content-Type", contentType);
         exchange.sendResponseHeaders(status, bytes.length);
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
         }
-    }
-
-    private static String escapeHtml(String value) {
-        return value.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
     }
 }
