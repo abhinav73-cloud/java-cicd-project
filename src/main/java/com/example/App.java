@@ -41,6 +41,7 @@ public class App {
         App calculator = new App();
 
         server.createContext("/", exchange -> {
+
             String result = "";
 
             if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -60,24 +61,29 @@ public class App {
                             result = String.valueOf(
                                     calculator.add(num1, num2));
                             break;
+
                         case "subtract":
                             result = String.valueOf(
                                     calculator.subtract(num1, num2));
                             break;
+
                         case "multiply":
                             result = String.valueOf(
                                     calculator.multiply(num1, num2));
                             break;
+
                         case "divide":
                             result = String.valueOf(
                                     calculator.divide(num1, num2));
                             break;
+
                         default:
                             result = "Invalid operation";
                     }
 
                 } catch (ArithmeticException e) {
                     result = "Error: " + e.getMessage();
+
                 } catch (Exception e) {
                     result = "Please enter valid numbers.";
                 }
@@ -99,6 +105,7 @@ public class App {
                                 min-height: 100vh;
                                 margin: 0;
                             }
+
                             .calculator {
                                 background: white;
                                 padding: 30px;
@@ -107,7 +114,11 @@ public class App {
                                 width: 320px;
                                 text-align: center;
                             }
-                            h1 { color: #263b80; }
+
+                            h1 {
+                                color: #263b80;
+                            }
+
                             input, select, button {
                                 box-sizing: border-box;
                                 width: 100%;
@@ -117,13 +128,18 @@ public class App {
                                 border: 1px solid #ccc;
                                 font-size: 16px;
                             }
+
                             button {
                                 background: #3155cc;
                                 color: white;
                                 border: none;
                                 cursor: pointer;
                             }
-                            button:hover { background: #203b9c; }
+
+                            button:hover {
+                                background: #203b9c;
+                            }
+
                             .result {
                                 margin-top: 15px;
                                 color: #167342;
@@ -131,42 +147,56 @@ public class App {
                             }
                         </style>
                     </head>
+
                     <body>
                         <div class="calculator">
                             <h1>Java Calculator</h1>
                             <p>Java CI/CD Web Application</p>
+
                             <form method="POST" action="/">
                                 <input type="number" name="num1"
                                        placeholder="First number" required>
+
                                 <input type="number" name="num2"
                                        placeholder="Second number" required>
+
                                 <select name="operation">
                                     <option value="add">Addition (+)</option>
                                     <option value="subtract">Subtraction (-)</option>
                                     <option value="multiply">Multiplication (*)</option>
                                     <option value="divide">Division (/)</option>
                                 </select>
+
                                 <button type="submit">Calculate</button>
                             </form>
-                            <div class="result">%s</div>
+
+                            <div class="result">__RESULT__</div>
                         </div>
                     </body>
                     </html>
-                    """.formatted(result);
+                    """;
+
+            html = html.replace("__RESULT__", result);
 
             sendResponse(exchange, 200, html, "text/html; charset=UTF-8");
         });
 
         server.createContext("/health", exchange -> {
-            sendResponse(exchange, 200,
-                    "Application is healthy!", "text/plain");
+            sendResponse(
+                    exchange,
+                    200,
+                    "Application is healthy!",
+                    "text/plain"
+            );
         });
 
         server.setExecutor(null);
+
         return server;
     }
 
     public static void main(String[] args) throws IOException {
+
         HttpServer server = createServer();
         server.start();
 
@@ -174,9 +204,11 @@ public class App {
     }
 
     private static Map<String, String> parseForm(String body) {
+
         Map<String, String> data = new HashMap<>();
 
         for (String pair : body.split("&")) {
+
             String[] parts = pair.split("=", 2);
 
             if (parts.length == 2) {
@@ -203,6 +235,8 @@ public class App {
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
+        } finally {
+            exchange.close();
         }
     }
 }
