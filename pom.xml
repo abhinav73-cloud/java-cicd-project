@@ -1,3 +1,4 @@
+```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -38,4 +39,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- GitHub Packages configuration -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/abhinav73-cloud/java-cicd-project</url>
+        </repository>
+    </distributionManagement>
+
 </project>
+```
