@@ -1,0 +1,48 @@
+
+name: 01 - Java Build and Unit Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  java-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Verify project structure
+        run: |
+          test -f pom.xml
+          test -f src/main/java/com/example/App.java
+          test -f src/test/java/com/example/AppTest.java
+          test -d src/main/java
+          test -d src/test/java
+          echo "Project structure verified successfully"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Compile application
+        run: mvn clean compile
+
+      - name: Run unit tests
+        run: mvn test
+
+      - name: Package application
+        run: mvn package
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-app-jar
+          path: target/*.jar
+          retention-days: 7
