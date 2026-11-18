@@ -24,11 +24,10 @@ class AppTest {
         calculator = new App();
 
         server = App.createServer();
-        server.bind(new java.net.InetSocketAddress("0.0.0.0", 0));
-        server.start();
+server.start();
 
-        baseUrl = "http://127.0.0.1:"
-                + server.getAddress().getPort();
+baseUrl = "http://127.0.0.1:"
+        + server.getAddress().getPort();
     }
 
     @AfterEach
