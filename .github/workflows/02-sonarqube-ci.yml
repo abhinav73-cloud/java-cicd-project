@@ -33,7 +33,7 @@ jobs:
       - name: Run SonarQube analysis
         run: |
           mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.3.0.6276:sonar \
-            -Dsonar.projectKey=java-cicd-project \
+            -Dsonar.projectKey=demo \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.qualitygate.wait=true
