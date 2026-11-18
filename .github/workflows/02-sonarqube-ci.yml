@@ -29,13 +29,15 @@ jobs:
           java-version: '17'
           cache: maven
 
+      
       - name: Run SonarQube analysis
         run: |
-          mvn clean verify sonar:sonar \
+          mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.3.0:sonar \
             -Dsonar.projectKey=java-cicd-project \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.qualitygate.wait=true
+
 
       - name: Upload JAR artifact for Pipeline 3
         uses: actions/upload-artifact@v4
